@@ -472,10 +472,13 @@ class TorrentProcessHandler():
                                         logger.log(u'Failed post-processing file "%s" with error "%s"' % (fullpath, ex(e)), 
                                                    logger.ERROR)
                                         
+                            ## Richard Hills richard@webshift.co.nz 2013-07-20 : if your file is downloaded but does not match we remove torrent and leave files for manual processing.
+			    ## any file success can match a single file from a multi file torrent - we will lose some data regardless if we have 1 file in a multi file torrent which matches and the others fail
                             if not any_file_success:
-                                logger.log(u'When post-processing the completed torrent %s, no useful files were found.' % (name), logger.ERROR)
-                                
-                            torrent_data['post_processed'] = True
+				logger.log(u'Post processing found no useful information for file "%s" please process this manually (rename/move and manually trigger processing)' % (fullpath), logger.ERROR);
+				_remove_torrent_by_handle(torrent_data['handle'], False)
+			    else:
+                                torrent_data['post_processed'] = True
                         else:
                             # post-processing has already been performed.  So we just 
                             # need to ensure check the ratio and delete the torrent
