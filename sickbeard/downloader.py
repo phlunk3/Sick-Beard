@@ -21,6 +21,8 @@ from sickbeard.helpers import isMediaFile
 from sickbeard import postProcessor
 from sickbeard import exceptions
 from sickbeard.tv import TVEpisode, TVShow
+## Richard Hills <richard@webshift.co.nz> 2013-07-26 - change to include notifiers
+from sickbeard import notifiers
 import sickbeard
 
 LIBTORRENT_AVAILABLE = False
@@ -173,8 +175,9 @@ def download_from_torrent(torrent, filename=None, postProcessingDone=False, star
                                lt.torrent_status.downloading,
                                lt.torrent_status.finished,
                                lt.torrent_status.downloading_metadata]:
-                    logger.log(u'Torrent "%s" has state "%s" (%s), interpreting as snatched' % (name, s.state, repr(s.state)), 
-                               logger.MESSAGE)
+                    logger.log(u'Torrent "%s" has state "%s" (%s), interpreting as snatched' % (name, s.state, repr(s.state)), logger.MESSAGE)
+                    # Richard Hills <richard@webshift.co.nz> 2013-07-26 - change to include notifiers
+                    notifiers.notify_snatch(u'Torrent ' + name  + u'has state it going on, interpreting as snatched')
                     return True
             elif s.state is lt.torrent_status.downloading_metadata and torrent.startswith('magnet:'):
                 # if it's a magnet, 'downloading_metadata' is considered a success
