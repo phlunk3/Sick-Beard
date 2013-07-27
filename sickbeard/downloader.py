@@ -176,13 +176,12 @@ def download_from_torrent(torrent, filename=None, postProcessingDone=False, star
                                lt.torrent_status.finished,
                                lt.torrent_status.downloading_metadata]:
                     logger.log(u'Torrent "%s" has state "%s" (%s), interpreting as snatched' % (name, s.state, repr(s.state)), logger.MESSAGE)
-                    # Richard Hills <richard@webshift.co.nz> 2013-07-26 - change to include notifiers
                     notifiers.notify_snatch(u'Torrent ' + name  + u'has state it going on, interpreting as snatched')
                     return True
             elif s.state is lt.torrent_status.downloading_metadata and torrent.startswith('magnet:'):
                 # if it's a magnet, 'downloading_metadata' is considered a success
-                logger.log(u'Torrent has state downloading_metadata, interpreting as snatched', 
-                               logger.MESSAGE)
+                logger.log(u'Torrent has state downloading_metadata, interpreting as snatched',logger.MESSAGE)
+                notifiers.notify_snatch(u'Torrent ' + name  + u'has state it going on, interpreting as snatched')
                 return True
             else:
                 # no metadata and not a magnet?  Definitely not started yet then!
@@ -190,8 +189,7 @@ def download_from_torrent(torrent, filename=None, postProcessingDone=False, star
             
             # check for timeout
             if time.time() - start_time > TORRENT_START_WAIT_TIMEOUT_SECS:
-                logger.log(u'Torrent has failed to start within timeout %d secs.  Removing' % (TORRENT_START_WAIT_TIMEOUT_SECS),
-                           logger.WARNING)
+                logger.log(u'Torrent has failed to start within timeout %d secs.  Removing' % (TORRENT_START_WAIT_TIMEOUT_SECS),logger.WARNING)
                 _remove_torrent_by_handle(h)
                 return False
                 
