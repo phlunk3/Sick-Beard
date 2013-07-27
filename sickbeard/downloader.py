@@ -176,12 +176,12 @@ def download_from_torrent(torrent, filename=None, postProcessingDone=False, star
                                lt.torrent_status.finished,
                                lt.torrent_status.downloading_metadata]:
                     logger.log(u'Torrent "%s" has state "%s" (%s), interpreting as snatched' % (name, s.state, repr(s.state)), logger.MESSAGE)
-                    notifiers.notify_snatch(u'Torrent ' + name  + u'has state it going on, interpreting as snatched')
+                    notifiers.notify_snatch(u'Torrent ' + name  + u' interpreted as snatched')
                     return True
             elif s.state is lt.torrent_status.downloading_metadata and torrent.startswith('magnet:'):
                 # if it's a magnet, 'downloading_metadata' is considered a success
                 logger.log(u'Torrent has state downloading_metadata, interpreting as snatched',logger.MESSAGE)
-                notifiers.notify_snatch(u'Torrent ' + name  + u'has state it going on, interpreting as snatched')
+                notifiers.notify_snatch(u'Torrent ' + name  + u' interpreted as snatched')
                 return True
             else:
                 # no metadata and not a magnet?  Definitely not started yet then!
